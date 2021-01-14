@@ -1,0 +1,32 @@
+html,
+body {
+    height: 100%;
+    min-height: 100vh;
+}
+
+.bg {
+    /* The image used */
+    background-image: url("img/person-in-boat.jpg");
+
+    /* Full height */
+    height: 300px;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.back-fluid {
+    background-color: violet;
+}
+
+.back {
+    background-color: violet;
+    border-radius: 5px;
+}
+
+.footer {
+    flex: 0 0 50px;
+    margin-top: auto;
+}

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Hello, world!</title>
+</head>
+
+<body class="d-flex flex-column">
+    <section class="container-fluid bg-secondary pb-4">
+        <h1 class="text-center text-light">Weather Dashboard</h1>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-4 pl-5">
+                <div class="pb-2">
+                    <h3>Search for City:</h3>
+                    <form class="form-inline" id="submitId">
+                        <input type="text" class="form-control" id="pwd">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <ul id="cityList" class="list-group">
+                    <!-- <li class="list-group-item">Austin</li>
+                    <li class="list-group-item">Chicago</li>
+                    <li class="list-group-item">New York</li>
+                    <li class="list-group-item">Orlando</li>
+                    <li class="list-group-item">San Francisco</li>
+                    <li class="list-group-item">Seattle</li>
+                    <li class="list-group-item">Denver</li>
+                    <li class="list-group-item">Atlanta</li> -->
+                </ul>
+            </div>
+            <div class="col-7 offset-1">
+                <div class="row">
+                    <div id="newcity" class="col-12">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 pr-5">
+                        <h2>5-Day Forcast</h2>
+                        <div id="cardDeck" class="card-deck">
+                            <!-- <div class="card bg-primary">
+                                <div class="card-body text-center">
+                                    <h3>Date</h3>
+                                    <p class="card-text mt-2">Temp: ${} &#176;F</p>
+                                    <p class="card-text mt-2">Humidity: ${}%</p>
+                                </div>
+                            </div> -->
+                            <!-- <div class="card bg-warning">
+                                <div class="card-body text-center">
+                                    <p class="card-text">Some text inside the second card</p>
+                                </div>
+                            </div>
+                            <div class="card bg-success">
+                                <div class="card-body text-center">
+                                    <p class="card-text">Some text inside the third card</p>
+                                </div>
+                            </div> -->
+                            <!-- <div class="card bg-danger">
+                                <div class="card-body text-center">
+                                    <p class="card-text">Some text inside the fourth card</p>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script> -->
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            if (localStorage.getItem('cities') === null) {
+                console.log('No Saved Cites');
+            } else {
+                const savedCities = localStorage.getItem('cities').split(',')
+                    // saveCites is and Array
+                console.log(savedCities);
+                savedCities.map((savedcity) => {
+                    $('#cityList').append(`<li class="list-group-item"><button class="city-btn btn btn-lg btn-block text-left shadow-none" style="background-color:transparent">${savedcity}</button></li>`)
+                });
+                searchCity(savedCities[savedCities.length - 1])
+            }
+
+            $('.city-btn').on('click', (evt) => {
+                evt.preventDefault();
+                console.log('In the list group: ', evt.target.innerText);
+                let savedCity = evt.target.innerText;
+                searchCity(savedCity)
+            })
+
+            $('#submitId').submit(function(e) {
+                e.preventDefault();
+                console.log($('#pwd').val());
+
+                let city = $('#pwd').val();
+                console.log(localStorage.getItem('cities'));
+                if (localStorage.getItem('cities') === null) {
+                    localStorage.setItem('cities', city);
+                    $('#cityList').append(`<li class="list-group-item"><button class="city-btn btn btn-lg btn-block text-left shadow-none" style="background-color:transparent">${city}</button></li>`)
+                    console.log(localStorage.getItem('cities'));
+                } else if (localStorage.getItem('cities').includes(city)) {
+                    console.log("City Exists and not added to localStorage");
+                } else {
+                    let newCites = localStorage.getItem('cities').concat(`,${city}`)
+                    localStorage.setItem('cities', newCites);
+                    $('#cityList').append(`<li class="list-group-item"><button class="city-btn btn btn-lg btn-block text-left shadow-none" style="background-color:transparent">${city}</button></li>`)
+                    console.log(localStorage.getItem('cities'));
+                }
+                console.log(localStorage.getItem('cities'));
+
+                city = city.replace(' ', '+');
+                console.log('City with a plus sign', city);
+
+                // https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=ef770744c08ab53e003eee608340399d
+                //`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=ef770744c08ab53e003eee608340399d
+
+                searchCity(city);
+                $('.city-btn').on('click', (evt) => {
+                    evt.preventDefault();
+                    console.log('In the list group: ', evt.target.innerText);
+                    let savedCity = evt.target.innerText;
+                    searchCity(savedCity)
+                })
+
+            });
+
+            function fiveDayForcast(data, fivedays) {
+                $("#cardDeck").empty();
+                fivedays.map((day) => { // 8, 16, 24, 32, 39
+                    let temp = data.list[day].main.temp;
+                    let humidity = data.list[day].main.humidity;
+                    let theDate = new Date(data.list[day].dt * 1000)
+                    let month = theDate.getMonth() + 1;
+                    let newDay = theDate.getDate();
+                    let year = theDate.getFullYear();
+                    let icon = data.list[day].weather[0].icon;
+                    let iconUrl = `http://openweathermap.org/img/wn/${icon}.png`;
+
+                    let forcastDay = `<div class="card bg-primary">
+                                <div class="card-body text-center">
+                                    <h5 class="mb-3 text-light">${month}/${newDay}/${year}</h5>
+                                    <p><img src="${iconUrl}" alt="" srcset=""></p>
+                                    <p class="card-text mt-2 text-light">Temp: ${temp} &#176;F</p>
+                                    <p class="card-text mt-2 text-light">Humidity: ${humidity}%</p>
+                                </div>
+                            </div>`;
+
+                    $("#cardDeck").append(forcastDay)
+                })
+            }
+
+            function searchCity(city) {
+                $.get(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=ef770744c08ab53e003eee608340399d`, function(data, status) {
+                    $("#newcity").empty();
+                    console.log('All data from API', data);
+                    console.log(data.list[0].main.temp);
+                    console.log(data.city.coord.lat);
+                    let timeStamp = data.list[0].dt
+                    console.log(timeStamp);
+                    let daySeconds = 24 * 60 * 60;
+                    let day01 = timeStamp + daySeconds;
+                    let day02 = timeStamp + 2 * daySeconds;
+                    let day03 = timeStamp + 3 * daySeconds;
+                    let day04 = timeStamp + 4 * daySeconds;
+                    let day05 = timeStamp + 5 * daySeconds;
+
+                    let today = new Date(timeStamp * 1000);
+                    console.log(today);
+                    let month = today.getMonth() + 1;
+                    let day = today.getDate();
+                    let year = today.getFullYear()
+
+                    console.log('Day 1: ', day01);
+                    console.log('Day 2: ', day02);
+                    console.log('Day 5: ', day05);
+
+                    let fiveDays = [8, 16, 24, 32, 39]
+
+                    let lat = data.city.coord.lat;
+                    let lon = data.city.coord.lon;
+
+                    let lonlaturl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=ef770744c08ab53e003eee608340399d`
+
+                    let newCity = data.city.name;
+                    let temp = data.list[0].main.temp;
+                    let humidity = data.list[0].main.humidity;
+                    let windSpeed = data.list[0].wind.speed;
+                    let icon = data.list[day].weather[0].icon;
+                    let iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+
+
+                    $("#newcity").append(`<h1>${newCity} (${month}/${day}/${year}) <img src="${iconUrl}" alt="" srcset=""></h1> `);
+                    $("#newcity").append(`<p>Temperature: ${temp} &#176;F</p>`);
+                    $("#newcity").append(`<p>Humidity: ${humidity}%</p>`);
+                    $("#newcity").append(`<p>Wind Speed: ${windSpeed} MPH</p>`);
+
+                    let jqxhr = $.get(lonlaturl, (data, textStatus) => {
+                        console.log(data.value);
+                        return (this)
+                    });
+
+                    console.log('From jQuery Get: ', jqxhr);
+                    jqxhr.done((data) => {
+                        console.log(data);
+                        let uvIndex = data.value;
+                        $('.uv-info').remove();
+                        if (uvIndex <= 2.9) {
+                            $("#newcity").append(`<p class="uv-info">UV Index: <span class="bg-success p-1">${uvIndex}</span> </p>`)
+                        } else if (uvIndex > 2.9 && uvIndex <= 5.9) {
+                            $("#newcity").append(`<p class="uv-info">UV Index: <span class="bg-warning p-1">${uvIndex}</span> </p>`)
+                        } else if (uvIndex > 5.9) {
+                            $("#newcity").append(`<p class="uv-info">UV Index: <span class="bg-danger p-1">${uvIndex}</span> </p>`)
+                        }
+
+                    })
+
+                    fiveDayForcast(data, fiveDays)
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
